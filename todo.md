@@ -1,0 +1,49 @@
+# SecureVault TODO
+
+- [x] Lock screen with 6-digit PIN setup and unlock
+- [x] AES-256 client-side encryption via CryptoJS
+- [x] Vault dashboard with sidebar navigation
+- [x] Add/edit/delete entries (logins, notes, cards, identities)
+- [x] Favorites, search, entry detail panel
+- [x] Encrypted export (.svault) and import for device transfer
+- [x] Settings page with passcode change
+- [x] Import page from lock screen link
+- [x] Add `hasPurchased` column to users table in DB schema
+- [x] Add Stripe product definition (one-time $4.99 purchase)
+- [x] Add tRPC procedure: createCheckoutSession
+- [x] Add Stripe webhook handler at /api/stripe/webhook
+- [x] Build marketing landing page (LandingPage.tsx)
+- [x] Build PaymentSuccess page
+- [x] Gate vault access behind payment check (useAuth + hasPurchased)
+- [x] Write vitest for checkout session procedure
+- [x] Auto-lock timer: configurable inactivity timeout in Settings (1, 5, 15, 30 min, never)
+- [x] Auto-lock: persist timer preference in localStorage, lock vault on inactivity
+- [x] Purchase history page at /orders with Stripe payment records
+- [x] Password strength meter in entry form (weak/fair/strong/very strong)
+- [x] Polished secure payment page with trust signals and Stripe branding
+- [x] DB schema: vaultImages table (id, userId, s3Key, url, name, size, createdAt)
+- [x] DB schema: referrals table (id, referrerId, refereeId, code, status, rewardPaid)
+- [x] DB schema: add referralCode and referralBalance columns to users table
+- [x] Server: image upload procedure (presign S3 put, save metadata)
+- [x] Server: image list and delete procedures
+- [x] Server: referral code generation and lookup procedures
+- [x] Server: referral reward trigger in Stripe webhook
+- [x] UI: Images section in vault sidebar with upload + gallery
+- [x] UI: Share/Refer button in vault with unique link, copy + share options
+- [x] UI: Referral status panel showing invites sent and $5 reward status
+- [x] Payout request button on Refer & Earn page with owner notification
+- [x] Image vault albums/categories (create, assign, filter by album)
+- [x] Share via email option on referral page (pre-filled mailto link)
+- [x] PWA: manifest.json with app name, icons, theme color, and display standalone
+- [x] PWA: service worker for offline shell caching
+- [x] Admin dashboard at /admin (owner-only) with user count, revenue, referral stats, payout requests
+- [x] My Account page with purchase date, account email, and logout button
+- [x] Update app price from $4.99 to $20.00 (Stripe product, landing page, checkout page)
+- [x] Add refund eligibility API: check if user received referral reward within first 30 days
+- [x] Conditionally hide 30-day guarantee badge for users who voided it via referral reward
+- [x] Display clear clause text explaining when the guarantee is voided
+- [x] Update app price back to $4.99 (Stripe product, all UI files)
+- [x] Update referral reward from $5 to $1 per successful referral (server + UI)
+- [x] Terms of Service page at /terms with refund, referral, and guarantee policies
+- [x] Social share buttons (Twitter/X and WhatsApp) on referral page
+- [x] Open Graph meta tags, favicon, and publish-ready head tags in index.html
