@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vault</title>
+</head>
+<body style="background:black;color:gold;text-align:center;padding:50px;">
+
+<h1>🔐 Secure Vault</h1>
+
+<input id="data" placeholder="Enter private info"><br><br>
+<button onclick="save()">Save</button>
+
+<p id="msg"></p>
+
+<script>
+function save() {
+  let val = document.getElementById("data").value;
+  localStorage.setItem("vault", val);
+  document.getElementById("msg").innerText = "Saved!";
+}
+</script>
+
+</body>
+</html>
