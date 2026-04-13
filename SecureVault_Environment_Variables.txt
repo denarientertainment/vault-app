@@ -1,0 +1,44 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# SecureVault — Environment Variables Template
+# Copy this content into a file named .env in your project root.
+# Fill in ALL values before running the app.
+# NEVER commit .env to Git — add it to .gitignore.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── DATABASE ──────────────────────────────────────────────────────────────────
+# MySQL connection string (PlanetScale, TiDB Cloud, Railway MySQL, or self-hosted)
+DATABASE_URL=mysql://user:password@host:3306/securevault
+
+# ── AUTHENTICATION ────────────────────────────────────────────────────────────
+# Generate with: openssl rand -hex 64
+JWT_SECRET=replace_with_64_char_random_hex_string
+
+# Manus OAuth (copy from your Manus project settings)
+VITE_APP_ID=your_manus_app_id
+OAUTH_SERVER_URL=https://api.manus.im
+VITE_OAUTH_PORTAL_URL=https://auth.manus.im
+OWNER_OPEN_ID=your_manus_open_id
+OWNER_NAME=Your Name
+
+# ── STRIPE ────────────────────────────────────────────────────────────────────
+# Get from https://dashboard.stripe.com/apikeys
+# Use sk_test_ / pk_test_ for development, sk_live_ / pk_live_ for production
+STRIPE_SECRET_KEY=sk_live_...
+VITE_STRIPE_PUBLISHABLE_KEY=pk_live_...
+# Get from Stripe Dashboard -> Webhooks -> your endpoint -> Signing secret
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# ── AMAZON S3 (Image Vault storage) ──────────────────────────────────────────
+AWS_ACCESS_KEY_ID=AKIA...
+AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET=your-securevault-bucket
+
+# ── APP CONFIG ────────────────────────────────────────────────────────────────
+VITE_APP_TITLE=SecureVault
+VITE_APP_LOGO=https://your-cdn.com/logo.png
+NODE_ENV=production
+
+# ── ANALYTICS (optional) ─────────────────────────────────────────────────────
+VITE_ANALYTICS_ENDPOINT=
+VITE_ANALYTICS_WEBSITE_ID=
