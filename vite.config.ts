@@ -5,10 +5,6 @@ import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 
-// =============================================================================
-// Manus Debug Collector - Vite Plugin
-// =============================================================================
-
 const PROJECT_ROOT = import.meta.dirname;
 const LOG_DIR = path.join(PROJECT_ROOT, ".manus-logs");
 const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024;
@@ -127,7 +123,6 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-// ✅ FIXED PLUGINS (jsxLocPlugin REMOVED)
 const plugins = [
   react(),
   tailwindcss(),
@@ -139,14 +134,12 @@ export default defineConfig({
   plugins,
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
+      "@": path.resolve(import.meta.dirname, "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
   },
   envDir: path.resolve(import.meta.dirname),
-  root: path.resolve(import.meta.dirname, "client"),
-  publicDir: path.resolve(import.meta.dirname, "client", "public"),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
