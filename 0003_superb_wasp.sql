@@ -1,0 +1,1 @@
+ALTER TABLE `vaultImages` ADD `album` varchar(100);
