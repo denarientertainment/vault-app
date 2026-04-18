@@ -32,7 +32,7 @@ COPY package.json pnpm-lock.yaml ./
 COPY patches/ ./patches/
 
 # Install production dependencies only
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile
 
 # Copy built output from builder
 COPY --from=builder /app/dist ./dist
