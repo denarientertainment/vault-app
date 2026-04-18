@@ -10,14 +10,6 @@ function getQueryParam(req: Request, key: string): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-function decodeStateRedirectUri(state: string): string {
-  try {
-    return Buffer.from(state, "base64").toString("utf-8");
-  } catch {
-    throw new Error("Invalid OAuth state");
-  }
-}
-
 export function registerOAuthRoutes(app: Express) {
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
@@ -40,8 +32,7 @@ export function registerOAuthRoutes(app: Express) {
         return;
       }
 
-      // Must exactly match the redirect_uri used in the original /authorize request
-      const redirectUri = decodeStateRedirectUri(state);
+      const redirectUri = "https://vault.denarient.com/api/oauth/callback";
 
       const tokenResponse = await axios.post(
         `${oauthServerUrl}/oauth/token`,
