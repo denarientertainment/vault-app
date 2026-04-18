@@ -1,4 +1,5 @@
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import axios from "axios";
+import { COOKIE_NAME, ONE_YEAR_MS } from "../../shared/const";
 import type { Express, Request, Response } from "express";
 import * as db from "../db";
 import { getSessionCookieOptions } from "./cookies";
@@ -20,29 +21,75 @@ export function registerOAuthRoutes(app: Express) {
     }
 
     try {
-      const tokenResponse = await sdk.exchangeCodeForToken(code, state);
-      const userInfo = await sdk.getUserInfo(tokenResponse.accessToken);
+      const oauthServerUrl = process.env.OAUTH_SERVER_URL;
+      const auth0ClientId = process.env.AUTH0_CLIENT_ID;
+      const auth0ClientSecret = process.env.AUTH0_CLIENT_SECRET;
 
-      if (!userInfo.openId) {
-        res.status(400).json({ error: "openId missing from user info" });
+      if (!oauthServerUrl || !auth0ClientId || !auth0ClientSecret) {
+        res.status(500).json({
+          error: "Missing AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, or OAUTH_SERVER_URL"
+        });
+        return;
+      }
+
+      const redirectUri = `${req.protocol}://${req.get("host")}/api/oauth/callback`;
+
+      const tokenResponse = await axios.post(
+        `${oauthServerUrl}/oauth/token`,
+        {
+          grant_type: "authorization_code",
+          client_id: auth0ClientId,
+          client_secret: auth0ClientSecret,
+          code,
+          redirect_uri: redirectUri
+        },
+        {
+          headers: {
+            "Content-Type": "application/json"
+          },
+          timeout: 30000
+        }
+      );
+
+      const { access_token } = tokenResponse.data ?? {};
+
+      if (!access_token) {
+        res.status(500).json({ error: "Missing access token from Auth0" });
+        return;
+      }
+
+      const userResponse = await axios.get(`${oauthServerUrl}/userinfo`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
+        },
+        timeout: 30000
+      });
+
+      const auth0User = userResponse.data ?? {};
+
+      if (!auth0User.sub) {
+        res.status(400).json({ error: "User ID missing from Auth0 userinfo" });
         return;
       }
 
       await db.upsertUser({
-        openId: userInfo.openId,
-        name: userInfo.name || null,
-        email: userInfo.email ?? null,
-        loginMethod: userInfo.loginMethod ?? userInfo.platform ?? null,
+        openId: auth0User.sub,
+        name: auth0User.name || auth0User.nickname || null,
+        email: auth0User.email ?? null,
+        loginMethod: "auth0",
         lastSignedIn: new Date(),
       });
 
-      const sessionToken = await sdk.createSessionToken(userInfo.openId, {
-        name: userInfo.name || "",
+      const sessionToken = await sdk.createSessionToken(auth0User.sub, {
+        name: auth0User.name || auth0User.nickname || "",
         expiresInMs: ONE_YEAR_MS,
       });
 
       const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+      res.cookie(COOKIE_NAME, sessionToken, {
+        ...cookieOptions,
+        maxAge: ONE_YEAR_MS
+      });
 
       res.redirect(302, "/");
     } catch (error) {
